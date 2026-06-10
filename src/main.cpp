@@ -5,8 +5,16 @@
 using namespace std;
 
 // Global Variables
-const int BOARD_SIZE = 3;
+const int BOARD_SIZE = 2;
 const unordered_map<int, char> intToTeam = {{0, 'X'}, {1, 'O'}};
+
+void fillBoard(char board[][BOARD_SIZE], char val) {
+  for (int i = 0; i < BOARD_SIZE; i++) {
+    for (int j = 0; j < BOARD_SIZE; j++) {
+      board[i][j] = val;
+    }
+  }
+}
 
 // This function consumes a 1D array of chars and checks if all values are
 // equal.
@@ -56,7 +64,7 @@ void updateBoard(char board[][BOARD_SIZE], int input, int &currentTurn) {
 void printBoard(char board[][BOARD_SIZE]) {
   int square = 1;
   for (int i = 0; i < BOARD_SIZE; i++) {
-    cout << "-------" << endl;
+    cout << string((BOARD_SIZE * 2) + 1, '-') << endl;
     cout << "|";
     for (int j = 0; j < BOARD_SIZE; j++) {
       board[i][j] == ' ' ? cout << square : cout << board[i][j];
@@ -65,6 +73,7 @@ void printBoard(char board[][BOARD_SIZE]) {
     }
     cout << endl;
   }
+  cout << string((BOARD_SIZE * 2) + 1, '-') << endl;
 }
 
 // This function checks the board (for arbitrarily large) to detect for a win.
@@ -100,8 +109,8 @@ bool isWin(char board[][BOARD_SIZE]) {
 }
 
 int main() {
-  char board[BOARD_SIZE][BOARD_SIZE] = {
-      {' ', ' ', ' '}, {' ', ' ', ' '}, {' ', ' ', ' '}};
+  char board[BOARD_SIZE][BOARD_SIZE];
+  fillBoard(board, ' ');
   int currentTurn = 0;
   bool isRoundOver = false;
   int input;
