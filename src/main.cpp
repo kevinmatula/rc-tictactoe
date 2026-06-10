@@ -120,6 +120,20 @@ bool isWin(char board[][BOARD_SIZE]) {
   return false;
 }
 
+// This function consumes a 2D array representing a board and checks if the game
+// has resulted in a tie.
+bool isTie(char board[][BOARD_SIZE]) {
+  for (int row = 0; row < BOARD_SIZE; row++) {
+    for (int col = 0; col < BOARD_SIZE; col++) {
+      if (board[row][col] == ' ') {
+        return false;
+      }
+    }
+  }
+  cout << "The Game has Resulted in a Tie!" << endl;
+  return true;
+}
+
 int main() {
   char board[BOARD_SIZE][BOARD_SIZE];
   fillBoard(board, ' ');
@@ -153,7 +167,7 @@ int main() {
       cin.clear();
       std::cin.ignore(numeric_limits<streamsize>::max(), '\n');
     }
-    isRoundOver = isWin(board);
+    isRoundOver = isWin(board) || isTie(board);
   }
   printBoard(board);
 }
