@@ -6,7 +6,6 @@ using namespace std;
 
 // Global Variables
 const int BOARD_SIZE = 3;
-// 0 represents X; 1 represents O
 unordered_map<int, char> intToTeam = {{0, 'X'}, {1, 'O'}};
 
 // This function cycles through the player turns. The function is purposefully
@@ -24,11 +23,20 @@ void updateTurn(int &currentTurn) {
 void updateBoard(char board[][BOARD_SIZE], int input, int &currentTurn) {
   int row = (input - 1) / BOARD_SIZE;
   int col = (input - 1) % BOARD_SIZE;
-  board[row][col] = intToTeam[currentTurn];
-  cout << "Placing Symbol at row: " << row << " and column: " << col << endl;
-  updateTurn(currentTurn);
+
+  if (input > 0 && input < 10 && board[row][col] == ' ') {
+    board[row][col] = intToTeam[currentTurn];
+    cout << "Placing Symbol at row: " << row << " and column: " << col << endl;
+    cout << endl;
+    updateTurn(currentTurn);
+  } else {
+    cout << "Incorrect # or choice input. Please Try Again." << endl;
+    cout << endl;
+  }
 }
 
+// This function consumes the board data and prints the board out into the
+// console. This function works for arbitrarily large boards.
 void printBoard(char board[][BOARD_SIZE], int rows) {
   int square = 1;
   for (int i = 0; i < rows; i++) {
@@ -46,7 +54,6 @@ void printBoard(char board[][BOARD_SIZE], int rows) {
 int main() {
   char board[BOARD_SIZE][BOARD_SIZE] = {
       {' ', ' ', ' '}, {' ', ' ', ' '}, {' ', ' ', ' '}};
-
   int currentTurn = 0;
   bool isOver = false;
   int input;
@@ -64,13 +71,13 @@ int main() {
        << endl;
   cout << endl;
 
-  // Game Logic
+  // Game Loop
   while (!isOver) {
     cout << "It is Player " << currentTurn + 1 << "'s Turn! ("
          << intToTeam[currentTurn] << ")" << endl;
     printBoard(board, BOARD_SIZE);
     cout << "Numerically select a box: ";
-    if (cin >> input && input > 0 && input < 10) {
+    if (cin >> input) {
       updateBoard(board, input, currentTurn);
     } else {
       cout << "Bad Input Recieved. Please Try Again!" << endl;
