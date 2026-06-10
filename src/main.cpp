@@ -81,14 +81,14 @@ void printBoard(char board[][BOARD_SIZE]) {
 // This function checks the board (for arbitrarily large) to detect for a win.
 // It works by checking specific row, columns, and diagonals.
 bool isWin(char board[][BOARD_SIZE]) {
-  char horizontal[BOARD_SIZE];
-  char vertical[BOARD_SIZE];
-  char diagonalLeft[BOARD_SIZE];
-  char diagonalRight[BOARD_SIZE];
+  char horizontal[BOARD_SIZE] = {' '};
+  char vertical[BOARD_SIZE] = {' '};
+  char diagonalLeft[BOARD_SIZE] = {' '};
+  char diagonalRight[BOARD_SIZE] = {' '};
 
   for (int row = 0; row < BOARD_SIZE; row++) {
     diagonalLeft[row] = board[row][row];
-    diagonalRight[row] = board[(BOARD_SIZE - 1) - row][row];
+    diagonalRight[row] = board[row][(BOARD_SIZE - 1) - row];
 
     if (row == (BOARD_SIZE - 1)) {
       string winMessage = "Game Won! Congrats Team ";
