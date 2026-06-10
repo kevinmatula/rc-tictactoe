@@ -6,7 +6,22 @@ using namespace std;
 
 // Global Variables
 const int BOARD_SIZE = 3;
-unordered_map<int, char> intToTeam = {{0, 'X'}, {1, 'O'}};
+const unordered_map<int, char> intToTeam = {{0, 'X'}, {1, 'O'}};
+
+// This function consumes a 1D array of chars and checks if all values are
+// equal.
+bool allMatching(char arr[BOARD_SIZE]) {
+  if (arr[0] == ' ') {
+    return false;
+  }
+
+  for (int i = 1; i < BOARD_SIZE; i++) {
+    if (arr[i] != arr[0]) {
+      return false;
+    }
+  }
+  return true;
+}
 
 // This function cycles through the player turns. The function is purposefully
 // generic so more players can be added.
@@ -23,9 +38,10 @@ void updateTurn(int &currentTurn) {
 void updateBoard(char board[][BOARD_SIZE], int input, int &currentTurn) {
   int row = (input - 1) / BOARD_SIZE;
   int col = (input - 1) % BOARD_SIZE;
+  int totalSquares = BOARD_SIZE * BOARD_SIZE;
 
-  if (input > 0 && input < 10 && board[row][col] == ' ') {
-    board[row][col] = intToTeam[currentTurn];
+  if (input > 0 && input <= totalSquares && board[row][col] == ' ') {
+    board[row][col] = intToTeam.at(currentTurn);
     cout << "Placing Symbol at row: " << row << " and column: " << col << endl;
     cout << endl;
     updateTurn(currentTurn);
@@ -37,13 +53,13 @@ void updateBoard(char board[][BOARD_SIZE], int input, int &currentTurn) {
 
 // This function consumes the board data and prints the board out into the
 // console. This function works for arbitrarily large boards.
-void printBoard(char board[][BOARD_SIZE], int rows) {
+void printBoard(char board[][BOARD_SIZE]) {
   int square = 1;
-  for (int i = 0; i < rows; i++) {
+  for (int i = 0; i < BOARD_SIZE; i++) {
     cout << "-------" << endl;
     cout << "|";
-    for (int j = 0; j < 3; j++) {
-      board[i][j] == ' ' ? cout << to_string(square) : cout << board[i][j];
+    for (int j = 0; j < BOARD_SIZE; j++) {
+      board[i][j] == ' ' ? cout << square : cout << board[i][j];
       cout << "|";
       square++;
     }
@@ -51,11 +67,43 @@ void printBoard(char board[][BOARD_SIZE], int rows) {
   }
 }
 
+// This function checks the board (for arbitrarily large) to detect for a win.
+// It works by checking specific row, columns, and diagonals.
+bool isWin(char board[][BOARD_SIZE]) {
+  char horizontal[BOARD_SIZE];
+  char vertical[BOARD_SIZE];
+  char diagonalLeft[BOARD_SIZE];
+  char diagonalRight[BOARD_SIZE];
+
+  for (int row = 0; row < BOARD_SIZE; row++) {
+    diagonalLeft[row] = board[row][row];
+    diagonalRight[row] = board[(BOARD_SIZE - 1) - row][(BOARD_SIZE - 1) - row];
+
+    if (row == (BOARD_SIZE - 1) &&
+        (allMatching(diagonalLeft) || allMatching(diagonalRight))) {
+      cout << "Game Won!" << endl;
+      return true;
+    }
+
+    for (int col = 0; col < BOARD_SIZE; col++) {
+      horizontal[col] = board[row][col];
+      vertical[col] = board[col][row];
+
+      if (col == (BOARD_SIZE - 1) &&
+          (allMatching(horizontal) || allMatching(vertical))) {
+        cout << "Game Won!" << endl;
+        return true;
+      }
+    }
+  }
+  return false;
+}
+
 int main() {
   char board[BOARD_SIZE][BOARD_SIZE] = {
       {' ', ' ', ' '}, {' ', ' ', ' '}, {' ', ' ', ' '}};
   int currentTurn = 0;
-  bool isOver = false;
+  bool isRoundOver = false;
   int input;
 
   // Welcome message
@@ -72,10 +120,10 @@ int main() {
   cout << endl;
 
   // Game Loop
-  while (!isOver) {
+  while (!isRoundOver) {
     cout << "It is Player " << currentTurn + 1 << "'s Turn! ("
-         << intToTeam[currentTurn] << ")" << endl;
-    printBoard(board, BOARD_SIZE);
+         << intToTeam.at(currentTurn) << ")" << endl;
+    printBoard(board);
     cout << "Numerically select a box: ";
     if (cin >> input) {
       updateBoard(board, input, currentTurn);
@@ -84,5 +132,7 @@ int main() {
       cin.clear();
       std::cin.ignore(numeric_limits<streamsize>::max(), '\n');
     }
+    isRoundOver = isWin(board);
   }
+  printBoard(board);
 }
