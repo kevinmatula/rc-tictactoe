@@ -1,4 +1,3 @@
-#include <endian.h>
 #include <iostream>
 #include <limits>
 #include <unordered_map>
@@ -52,7 +51,6 @@ void updateBoard(char board[][BOARD_SIZE], int input, int &currentTurn) {
 
   if (input > 0 && input <= totalSquares && board[row][col] == ' ') {
     board[row][col] = intToTeam.at(currentTurn);
-    cout << "Placing Symbol at row: " << row << " and column: " << col << endl;
     cout << endl;
     updateTurn(currentTurn);
   } else {
