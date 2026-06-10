@@ -1,3 +1,4 @@
+#include <endian.h>
 #include <iostream>
 #include <limits>
 #include <unordered_map>
@@ -5,9 +6,10 @@
 using namespace std;
 
 // Global Variables
-const int BOARD_SIZE = 2;
+const int BOARD_SIZE = 3;
 const unordered_map<int, char> intToTeam = {{0, 'X'}, {1, 'O'}};
 
+// This function populates the given board with whatever value is provided.
 void fillBoard(char board[][BOARD_SIZE], char val) {
   for (int i = 0; i < BOARD_SIZE; i++) {
     for (int j = 0; j < BOARD_SIZE; j++) {
@@ -86,22 +88,32 @@ bool isWin(char board[][BOARD_SIZE]) {
 
   for (int row = 0; row < BOARD_SIZE; row++) {
     diagonalLeft[row] = board[row][row];
-    diagonalRight[row] = board[(BOARD_SIZE - 1) - row][(BOARD_SIZE - 1) - row];
+    diagonalRight[row] = board[(BOARD_SIZE - 1) - row][row];
 
-    if (row == (BOARD_SIZE - 1) &&
-        (allMatching(diagonalLeft) || allMatching(diagonalRight))) {
-      cout << "Game Won!" << endl;
-      return true;
+    if (row == (BOARD_SIZE - 1)) {
+      string winMessage = "Game Won! Congrats Team ";
+      if (allMatching(diagonalLeft)) {
+        cout << winMessage << diagonalLeft[0] << "!" << endl;
+        return true;
+      } else if (allMatching(diagonalRight)) {
+        cout << winMessage << diagonalRight[0] << "!" << endl;
+        return true;
+      }
     }
 
     for (int col = 0; col < BOARD_SIZE; col++) {
       horizontal[col] = board[row][col];
       vertical[col] = board[col][row];
 
-      if (col == (BOARD_SIZE - 1) &&
-          (allMatching(horizontal) || allMatching(vertical))) {
-        cout << "Game Won!" << endl;
-        return true;
+      if (col == (BOARD_SIZE - 1)) {
+        string winMessage = "Game Won! Congrats Team ";
+        if (allMatching(horizontal)) {
+          cout << winMessage << horizontal[0] << "!" << endl;
+          return true;
+        } else if (allMatching(vertical)) {
+          cout << winMessage << vertical[0] << "!" << endl;
+          return true;
+        }
       }
     }
   }
