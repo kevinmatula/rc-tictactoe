@@ -2,11 +2,6 @@
 
 This is my code submission for RCs technical challenge.
 
-## TODO
+## Live Code Challenge 
 
-- Add isTie condition
-- Print out which player won the game
-
-## ----------
-
-- Separate logic into different files.
+For my live challenge, I plan on adding a computer player to play against, and make it smarter throughout the challenge.
